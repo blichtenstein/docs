@@ -1,0 +1,81 @@
+Requirements for Conformance to ISO 14230-4.
+
+I have a legal copy of ISO 14230-4.
+Copyright law and the license that I agreed to prevent me from providing a copy
+to anyone, however, the thing only has two pages of technical content.
+
+This document then is my own, Requirements for Conformance to ISO 14230-4.
+
+ISO 14230-4 is the fourth part of the Keyword Protocol 2000 specification,
+titled "part 4: Requirements for emission-related systems".
+
+It describes a subset of of the other ISO 14230 standards, a cut down version
+if you like.
+
+To the best of my knowledge ISO 14230-4 is "EOBD".  This is only part of KWP2000
+that is mandatory on cars sold in Europe (specifically petrol powered cars since
+2001 and diesel cars since I think 2003).
+
+It enables a fault code reader to be designed with a simple cut down version of
+KWP2000 as described in the other ISO 14230 standards (-1, -2, -3) which should
+be able to read emissions related fault codes on all new European cars.
+
+Here is what it says:-
+
+ISO 14230-1 and ISO 9141-2 are essentially the same except that ISO 14230-1
+mandates support for 24V systems.  Conformance to ISO 14230-4 does not require
+support for 24V systems.
+
+Optional length byte is not used.  Data length is limited to 7 bytes.
+
+Request messages have bits A1A0 of format byte set to 11 with address
+information and function addressing.
+
+Response messages have bits A1A0 of format byte set to 10 with address
+information and physical addressing.
+
+Messages sent to the vehicle will use functional address 33H.
+
+Target address of response will be the source address that was in the request
+message.
+
+Response messages will have the source address set to physical address of the
+ECU.
+
+Only normal timing with default values is supported.  Other timings specified
+in ISO 14230-2 are not supported.
+
+ECUs will support either 5 baud initialisation or fast initialisation.
+
+Scantools must support both 5 baud initialisation and fast initialisation.
+
+The ECU should only respond with keywords 2025, 2027, 2029 or 2031.  The
+scantool only needs to support 2025 functionality which is three byte header,
+no additional length byte and normal timing.
+
+If 5 baud initialisation is used then the 5 baud address is 33H.
+
+StopCommunication service is supported.
+
+AccessTiming Parameter is not supported.
+
+TesterPresent service will be supported; the scan tool can use TesterPresent
+(within P3) or another method to keep communication active.
+
+Emission related services are specified in ISO 15031-5.
+
+Other diagnostic services are not required.
+
+Negative responses must be one of:-
+10 GeneralReject
+11 ServiceNotSupported
+12 SubFunctionNotSupported-InvalidFormat
+21 Busy-RepeatRequest
+22 ConditionsNotCorrect or RequestSequenceError
+78 RequestCorrectlyReceived-ResponsePending
+
+Negative repsonses with code 78 must be sent within P2, the ECU must follow
+with a positive or negative response that is not code 78.
+
+The scantool must ignore negative response messages, not perform ISO 14230-3
+error handling, but instead wait for P2 timeout.
